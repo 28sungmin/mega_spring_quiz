@@ -27,7 +27,7 @@ public class Lesson03Quiz01RestController {
 	// /lesson03/quiz01/2?rent_price=90
 	@RequestMapping("/2")
 	public List<RealEstate> quiz01_2(
-			@RequestParam(value = "rent_price", defaultValue = "100") Integer rentPrice) {
+			@RequestParam(value = "rent_price", defaultValue = "100") int rentPrice) {
 		return realEstateBO.getRealEstateListByRentPrice(rentPrice);
 	}
 	

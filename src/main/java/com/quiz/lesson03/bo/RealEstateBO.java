@@ -21,7 +21,7 @@ public class RealEstateBO {
 	
 	// input: rent_price
 	// output: List<RealEstate>
-	public List<RealEstate> getRealEstateListByRentPrice(Integer rentPrice) {
+	public List<RealEstate> getRealEstateListByRentPrice(int rentPrice) {
 		return realEstateMapper.selectRealEstateListByRentPrice(rentPrice);
 	}
 	

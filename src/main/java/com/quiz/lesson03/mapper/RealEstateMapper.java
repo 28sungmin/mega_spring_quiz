@@ -15,7 +15,7 @@ public interface RealEstateMapper {
 	
 	// input: rentPrice(Integer)
 	// output: List<RealEstate>
-	public List<RealEstate> selectRealEstateListByRentPrice(Integer rentPrice);
+	public List<RealEstate> selectRealEstateListByRentPrice(int rentPrice);
 	
 	// input: area(int), price(int)
 	// output: List<RealEstate>
