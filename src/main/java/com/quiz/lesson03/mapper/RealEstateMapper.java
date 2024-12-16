@@ -24,4 +24,21 @@ public interface RealEstateMapper {
 			// @Param의 괄호 안에 있는 이름이 중요한 거임!! -> 이 이름으로 xml이 꺼낸다.
 			@Param("area") int area11111, 
 			@Param("price") int price11111);
+	
+	// i: RealEstate
+	// o: int
+	public int insertRealEstate(RealEstate realEstate);
+	
+	public int insertRealEstateAsField(
+			@Param("realtorId") int realtorId,
+			@Param("address") String address,
+			@Param("area") int area,
+			@Param("type") String type,
+			@Param("price") int price,
+			@Param("rentPrice") Integer rentPrice);
+	
+	public int updateRealEstateById(
+			@Param("id") int id, 
+			@Param("type") String type, 
+			@Param("price") int price);
 }
