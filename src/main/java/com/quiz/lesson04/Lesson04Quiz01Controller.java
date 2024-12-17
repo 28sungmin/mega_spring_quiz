@@ -30,7 +30,7 @@ public class Lesson04Quiz01Controller {
 	public String addSeller(
 			@RequestParam("nickname") String nickname,
 			@RequestParam("profileImageUrl") String profileImageUrl,
-			@RequestParam("temperature") Double temperature) {
+			@RequestParam("temperature") double temperature) {
 		
 		// DB insert
 		sellerBO.addSeller(nickname, profileImageUrl, temperature);
