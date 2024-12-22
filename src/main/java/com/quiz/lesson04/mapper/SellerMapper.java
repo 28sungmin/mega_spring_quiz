@@ -11,7 +11,9 @@ public interface SellerMapper {
 	public void insertSeller(
 			@Param("nickname") String nickname, 
 			@Param("profileImageUrl") String profileImageUrl, 
-			@Param("temperature") double temperature);
+			@Param("temperature") Double temperature);
 	
-	public Seller selectSeller();
+	public Seller selectLatestSeller();
+	
+	public Seller selectSellerById(int id);
 }

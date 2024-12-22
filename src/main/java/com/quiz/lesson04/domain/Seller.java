@@ -6,7 +6,7 @@ public class Seller {
 	private int id;
 	private String nickname;
 	private String profileImageUrl;
-	private Double temperature;
+	private double temperature; // select 용도로만 보면 null일 때 default로 36.5가 들어가므로 그냥 double이라고 해도 된다.
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	

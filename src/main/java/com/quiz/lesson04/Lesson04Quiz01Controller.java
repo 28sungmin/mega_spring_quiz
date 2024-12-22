@@ -29,8 +29,8 @@ public class Lesson04Quiz01Controller {
 	@PostMapping("/add-seller")
 	public String addSeller(
 			@RequestParam("nickname") String nickname,
-			@RequestParam("profileImageUrl") String profileImageUrl,
-			@RequestParam("temperature") double temperature) {
+			@RequestParam(value = "profileImageUrl", required = false) String profileImageUrl,
+			@RequestParam(value = "temperature", required = false) Double temperature) {
 		
 		// DB insert
 		sellerBO.addSeller(nickname, profileImageUrl, temperature);
@@ -41,10 +41,14 @@ public class Lesson04Quiz01Controller {
 	
 	// 최근에 가입된 한명의 판매자 화면
 	// http://localhost:8080/lesson04/quiz01/seller-info-view
+	// http://localhost:8080/lesson04/quiz01/seller-info-view?id=3
 	@GetMapping("seller-info-view")
-	public String sellerInfoView(Model model) {
+	public String sellerInfoView(
+			@RequestParam(value = "id", required = false) Integer id,
+			Model model) {
+		
 		// DB select
-		Seller seller = sellerBO.getSeller();
+		Seller seller = sellerBO.getSeller(id);
 		
 		// model에 데이터 담기 => HTML이 꺼내서 씀
 		model.addAttribute("result", seller);
