@@ -17,7 +17,11 @@
 		</div>
 		<div class="form-group">
 			<label for="url">주소</label>
-			<input type="text" class="form-control" id="url">
+			<div class="d-flex w-100">
+				<input type="text" class="form-control mr-2" id="url">
+				<button type="button" id="duplicateBtn" class="btn btn-info col-2">중복확인</button>
+			</div>
+			<small id="urlStateArea"></small>
 		</div>
 		
 		<!-- AJAX만 동작하도록 3종세트를 깬다. (submit을 button으로 한다.) -->
@@ -48,6 +52,11 @@
 					return;
 				}
 				
+				if ($("#urlStateArea").children().text() != "저장 가능한 url 입니다.") {
+					alert("주소 중복확인을 해주세요.");
+					return;
+				}
+				
 				console.log(name);
 				console.log(url);
 				
@@ -59,15 +68,47 @@
 					
 					// response - callback 함수
 				 	success:function(data) { // jquery의 $.ajax() 함수가 JSON String으로 온 것을 parsing 한다. => "{"code":200, "result":"성공"}" 한다는 의미 -> js의 dictionary로 만든다.
-				 		alert(data.code);
-				 		if (data == "성공") {
-				 			location.href="/lesson06/quiz01/after-add-bookmark-view"
+				 		//alert(data.code);
+				 		if (data.code == 200) {
+				 			// 성공 => 목록 화면 이동
+				 			location.href="/lesson06/quiz01/after-add-bookmark-view" // get request
 				 		}
 				 	},
 					error:function(e) {
 						alert("즐겨찾기가 추가되지 않았습니다.");
 					}
 				})
+			});
+			
+			$("#duplicateBtn").on("click", function() {
+				$("#urlStateArea").empty(); // 자식 태그들(손주 등등 모두)을 모두 지운다.
+				
+				let url = $("#url").val().trim();
+				// validation
+				if (!url) {
+					$("#urlStateArea").append('<span class="text-danger">이름이 비어있습니다.</span>');
+					return;
+				}
+				
+				$.ajax({
+					// request
+					type:"get",
+					url:"/lesson06/quiz01/is-duplicate-url",
+					data:{"url":url},
+					
+					// response
+					success:function(data) {
+				 		// {"code":200, "is_duplicate_url":true}
+				 		if (data.is_duplicate_url) {
+				 			$("#urlStateArea").append('<span class="text-danger">중복된 url 입니다.</span>')
+				 		} else {
+				 			$("#urlStateArea").append('<span class="text-success">저장 가능한 url 입니다.</span>')
+				 		}
+					},
+					error:function(e) {
+						alert("url 중복 확인에 실패했습니다.");
+					}
+				});
 			});
 		});
 	</script>

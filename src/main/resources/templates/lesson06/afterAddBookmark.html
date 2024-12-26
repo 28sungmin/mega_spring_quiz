@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>즐겨 찾기 목록</title>
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -17,16 +17,51 @@
 					<th>No.</th>
 					<th>이름</th>
 					<th>주소</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="bookmark : ${bookmarkList}">
 					<td th:text="${bookmark.id}"></td>
 					<td th:text="${bookmark.name}"></td>
-					<td th:text="${bookmark.url}"></td>
+					<td>
+						<a th:href="${bookmark.url}" th:text="${bookmark.url}"></a>
+					</td>
+					<td>
+						<button type="button" th:value="${bookmark.id}" class="btn btn-danger remove-btn">삭제</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	
+	<script>
+		$(document).ready(function(){
+			$(".remove-btn").on("click", function(){
+				// console.log($(this).val());
+				
+				let id = $(this).val();
+				
+				$.ajax({
+					// request
+					type:"post",
+					url:"/lesson06/quiz01/remove-bookmark",
+					data:{"id":id},
+					
+					// response
+					success:function(data) {
+				 		// {"code":200, "result":"성공"}
+				 		if (data.code == 200) {
+				 			// 성공 => 목록 화면 이동
+				 			history.go();
+				 		}
+				 	},
+					error:function(e) {
+						alert("삭제되지 않았습니다.");
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

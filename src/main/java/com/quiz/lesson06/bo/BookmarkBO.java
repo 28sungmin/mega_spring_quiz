@@ -14,11 +14,21 @@ public class BookmarkBO {
 	@Autowired
 	private BookmarkMapper bookmarkMapper;
 	
+	// i: name, url
+	// o: X
 	public void addBookmarkAsField(String name, String url) {
 		bookmarkMapper.insertBookmarkAsField(name, url);
 	}
 	
 	public List<Bookmark> getBookmarkList() {
 		return bookmarkMapper.selectBookmarkList();
+	}
+	
+	public boolean isDuplicateByUrl(String url) {
+		return bookmarkMapper.isDuplicateByUrl(url);
+	}
+	
+	public void removeBookmarkAsField(int id) {
+		bookmarkMapper.removeBookmarkAsField(id);
 	}
 }

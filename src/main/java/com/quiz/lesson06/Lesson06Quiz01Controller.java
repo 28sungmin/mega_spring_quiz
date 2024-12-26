@@ -50,13 +50,49 @@ public class Lesson06Quiz01Controller {
 		return result; // json string 응답
 	}
 	
+	// 중복 확인
+	@ResponseBody
+	@GetMapping("/is-duplicate-url")
+	public Map<String, Object> isDuplicateUrl(
+			@RequestParam("url") String url){
+		
+		// db select
+		boolean isDuplicate = bookmarkBO.isDuplicateByUrl(url);
+		
+		// 응답
+		// {"code":150, "is_duplicate_url":true}
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("is_duplicate_url", isDuplicate);
+		return result;
+	}
+	
+	// 삭제
+	@ResponseBody
+	@PostMapping("/remove-bookmark")
+	public Map<String, Object> removeBookmark(
+			@RequestParam("id") int id){
+		
+		bookmarkBO.removeBookmarkAsField(id);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("result", "성공");
+		
+		return result;
+	}
+	
 	// 즐겨찾기 목록 화면
 	@GetMapping("/after-add-bookmark-view")
 	public String afterAddBookmark(Model model) {
 		
+		// db select
 		List<Bookmark> bookmarkList = bookmarkBO.getBookmarkList();
 		
+		// model 담기
 		model.addAttribute("bookmarkList", bookmarkList);
+		
+		// 화면 이동
 		return "lesson06/afterAddBookmark";
 	}
 }
