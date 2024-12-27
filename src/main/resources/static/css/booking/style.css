@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+.wrap {
+  width: 100%;
+  margin: 0 auto;
+}
+header {
+  height: 80px;
+}
+.contents {
+}
+.contents > .menu {
+  height: 50px;
+  background-color: rgb(254, 202, 80);
+}
+.contents > .img {
+  height: 600px;
+}
+.contents > .call {
+  height: 300px;
+}
+footer {
+  height: 80px;
+}
+
+.contents .bookLive {
+  background-color: burlywood;
+}
+.contents .phone {
+  background-color: burlywood;
+}
+.contents .phone-number {
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.contents .member {
+  height: 60px;
+}
+.contents .id-password {
+  height: 150px;
+  margin: 0 auto;
+}
+.contents .register {
+  height: 40px;
+}
+.contents .book-check-word {
+  font-size: 30px;
+}
+.contents .book-check {
+  background-color: rgb(214, 149, 64);
+}
+
+.contents > .menu li:hover {
+  background-color: rgb(244, 229, 121);
+}

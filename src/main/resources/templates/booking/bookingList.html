@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>예약 목록</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/booking/style.css}"/>
+</head>
+<body>
+    <div class="wrap">
+      <header class="d-flex justify-content-center align-items-center">
+        <div class="display-4">통나무 펜션</div>
+      </header>
+      <section class="contents">
+        <nav class="menu d-flex align-items-center">
+          <ul class="nav nav-fill w-100 h-100 font-weight-bold">
+            <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="/booking/check-booking-view" class="nav-link text-light">펜션소개</a></li>
+            <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="#" class="nav-link text-light">객실보기</a></li>
+            <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="/booking/make-booking-view" class="nav-link text-light">예약하기</a></li>
+            <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="/booking/booking-list-view" class="nav-link text-light">예약목록</a></li>
+          </ul>
+        </nav>
+        <h3>예약 목록 보기</h3>
+        <table class="table text-center">
+        	<thead>
+        		<tr>
+        			<th>이름</th>
+        			<th>예약날짜</th>
+        			<th>숙박일수</th>
+        			<th>숙박인원</th>
+        			<th>전화번호</th>
+        			<th>예약안내</th>
+        			<th></th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		<tr th:each="booking : ${bookingList}">
+        			<td th:text="${booking.name}"></td>
+        			<td th:text="${#temporals.format(booking.date, 'yyyy년 M월 d일')}"></td>
+        			<td th:text="${booking.day}"></td>
+        			<td th:text="${booking.headcount}"></td>
+        			<td th:text="${booking.phoneNumber}"></td>
+        			<td th:switch="${booking.state}">
+        				<span th:case="대기중" class="text-info" th:text="${booking.state}"></span>
+        				<span th:case="확정" class="text-success" th:text="${booking.state}"></span>
+        				<span th:case="취소" class="text-danger" th:text="${booking.state}"></span>
+        			</td>
+        			<td>
+        				<button type="button" th:data-booking-id="${booking.id}" class="remove-btn btn btn-danger">삭제</button>
+        			</td>
+        		</tr>
+        	</tbody>
+        </table>
+       </section>
+       <footer class="d-flex align-items-center pl-3">
+        <div class="final text-secondary">
+          <span>제주특별자치도 제주시 애월읍</span>
+          <br />
+          <span>사업자등록번호: 111-22-255222 / 농어촌민박사업자지정 / 대표:김통목</span>
+          <br />
+          <span>Copyright 2024 tongnamu. All right reserved.</span>
+        </div>
+      </footer>
+    </div>
+    
+    <script>
+    	$(document).ready(function() {
+    		$(".remove-btn").on("click", function() {
+    			let id = $(this).data("booking-id");
+    			
+    			// alert(id);
+    			$.ajax({
+    				// request
+    				type:"delete",
+    				url:"/booking/remove-booking",
+    				data:{"id":id},
+    				
+    				// response
+    				success:function(data) {
+    					if (data.code == 200) {
+    						location.reload(true);
+    					} else if (data.code == 300) {
+    						alert(data.error_message);
+    					}
+    				},
+    				error:function(e) {
+    					alert("삭제에 실패했습니다.");
+    				}
+    				
+    			});
+    		})
+    	})
+    </script>
+</body>
+</html>

@@ -28,7 +28,9 @@
 						<a th:href="${bookmark.url}" th:text="${bookmark.url}"></a>
 					</td>
 					<td>
-						<button type="button" th:value="${bookmark.id}" class="btn btn-danger remove-btn">삭제</button>
+						<!-- <button type="button" th:value="${bookmark.id}" class="remove-btn btn btn-danger">삭제</button> -->
+						<!-- !!!!!카멜케이스 안됨!!!!! data- 뒤에는 내가 지은 이름이다 라는 의미이다. -->
+						<button type="button" th:data-bookmark-id="${bookmark.id}" class="remove-btn btn btn-danger">삭제</button>
 					</td>
 				</tr>
 			</tbody>
@@ -36,24 +38,42 @@
 	</div>
 	
 	<script>
-		$(document).ready(function(){
-			$(".remove-btn").on("click", function(){
+		$(document).ready(function() {
+			// 삭제 버튼
+			$(".remove-btn").on("click", function(e) {
 				// console.log($(this).val());
 				
-				let id = $(this).val();
+				// 1) button의 value에 담은 값 가져오기
+				// 방법1-1)
+				// let id = $(this).val();
+			
+				// 방법1-2)
+				// let id = e.target.value;
+		
+				// 방법1-3)
+				// let id = $(this).attr("value");
+				
+				// ★★★★★ 2) data를 이용해서 값 가져오기 - 여러 값 등록이 가능하다!!! => 많이 쓰는 방식
+				// 태그에서 사용할 때는 th:data-원하는 이름
+				// js에서 사용할 때는 .data() 함수 사용
+				let id = $(this).data("bookmark-id"); // data- 뒤에 쓴 이름 넣기
+				
 				
 				$.ajax({
 					// request
-					type:"post",
+					type:"delete",
 					url:"/lesson06/quiz01/remove-bookmark",
 					data:{"id":id},
 					
 					// response
 					success:function(data) {
 				 		// {"code":200, "result":"성공"}
-				 		if (data.code == 200) {
-				 			// 성공 => 목록 화면 이동
-				 			history.go();
+				 		if (data.code == 200) { // 성공
+				 			// 성공 => 새로고침 - 스크롤이 유지됨, 그러나 서버 리스트 데이터는 다시 가져온다.
+				 			location.reload(true); // true는 안 넣어도 됨 => 스크롤이 그 자리가 그대로 유지되는 새로고침이다.
+				 			// location.href="같은 경로" // 스크롤이 위로 올라가게 된다.
+				 		} else if (data.code == 300) { // 삭제할 데이터가 없는 경우 => 삭제 실패
+				 			alert(data.error_message);
 				 		}
 				 	},
 					error:function(e) {

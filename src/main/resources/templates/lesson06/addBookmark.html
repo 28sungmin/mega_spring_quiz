@@ -21,7 +21,8 @@
 				<input type="text" class="form-control mr-2" id="url">
 				<button type="button" id="duplicateBtn" class="btn btn-info col-2">중복확인</button>
 			</div>
-			<small id="urlStateArea"></small>
+			<small id="duplicateText" class="text-danger d-none">중복된 URL 입니다.</small>
+			<small id="availableText" class="text-success d-none">저장 가능한 URL 입니다.</small>
 		</div>
 		
 		<!-- AJAX만 동작하도록 3종세트를 깬다. (submit을 button으로 한다.) -->
@@ -52,8 +53,9 @@
 					return;
 				}
 				
-				if ($("#urlStateArea").children().text() != "저장 가능한 url 입니다.") {
-					alert("주소 중복확인을 해주세요.");
+				// availableText d-none이 있는게 => 추가 불가능한 상황
+				if ($("#availableText").hasClass("d-none")) {
+					alert("URL 중복확인을 해주세요.");
 					return;
 				}
 				
@@ -80,29 +82,39 @@
 				})
 			});
 			
+			// 중복 확인
 			$("#duplicateBtn").on("click", function() {
-				$("#urlStateArea").empty(); // 자식 태그들(손주 등등 모두)을 모두 지운다.
-				
+				//alert("중복 확인")				
 				let url = $("#url").val().trim();
+				
 				// validation
 				if (!url) {
-					$("#urlStateArea").append('<span class="text-danger">이름이 비어있습니다.</span>');
+					alert("주소를 입력하세요.");
 					return;
 				}
 				
+				// db 중복확인 - ajax 통신
 				$.ajax({
 					// request
-					type:"get",
+					type:"post", // 주소는 데이터가 클 수 있어서 get보다 post로 하자. => 파라미터 url이 길 수 있어서.
 					url:"/lesson06/quiz01/is-duplicate-url",
 					data:{"url":url},
 					
 					// response
-					success:function(data) {
-				 		// {"code":200, "is_duplicate_url":true}
-				 		if (data.is_duplicate_url) {
-				 			$("#urlStateArea").append('<span class="text-danger">중복된 url 입니다.</span>')
-				 		} else {
-				 			$("#urlStateArea").append('<span class="text-success">저장 가능한 url 입니다.</span>')
+					success:function(data) { // data: dictionary 형태
+				 		// {"code":200, "is_duplicate_url":true} => 중복
+				 		// {"code":200, "is_duplicate_url":false} => 중복 아님
+				 		// {"code":500, "error_message":"에러 원인"} => 로직 에러 상황
+				 		if (data.code == 500) { // 로직 상 에러
+				 			alert(data.error_message);
+				 		} else if (data.code == 200) { // 로직 상 성공
+				 			if (data.is_duplicate_url) { // 중복일 때
+				 				$("#duplicateText").removeClass("d-none");
+				 				$("#availableText").addClass("d-none");
+				 			} else { // 중복 아닐 때 => 사용 가능일 때
+				 				$("#duplicateText").addClass("d-none");
+				 				$("#availableText").removeClass("d-none");
+				 			}
 				 		}
 					},
 					error:function(e) {
