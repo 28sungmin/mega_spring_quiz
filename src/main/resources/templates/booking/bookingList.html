@@ -24,7 +24,7 @@
             <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="/booking/booking-list-view" class="nav-link text-light">예약목록</a></li>
           </ul>
         </nav>
-        <h3>예약 목록 보기</h3>
+        <h3 class="text-center mt-3">예약 목록 보기</h3>
         <table class="table text-center">
         	<thead>
         		<tr>
@@ -83,7 +83,7 @@
     				success:function(data) {
     					if (data.code == 200) {
     						location.reload(true);
-    					} else if (data.code == 300) {
+    					} else {
     						alert(data.error_message);
     					}
     				},

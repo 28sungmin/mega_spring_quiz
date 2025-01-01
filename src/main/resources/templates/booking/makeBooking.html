@@ -28,29 +28,30 @@
             <li class="nav-item col-3 d-flex justify-content-center align-items-center"><a href="/booking/booking-list-view" class="nav-link text-light">예약목록</a></li>
           </ul>
         </nav>
-        <div class="container bg-secondary">
-	        <h3>예약하기</h3>
-	       	<div>
-				<label for="name">이름</label>
-				<input type="text" id="name" name="name" class="form-control col-6">
-	       	</div>
-	       	<div>
-				<label for="date">예약날짜</label>
-				<input type="text" id="date" name="date" class="form-control col-6">
-	       	</div>
-	       	<div>
-				<label for="day">숙박일수</label>
-				<input type="text" id="day" name="day" class="form-control col-6">
-	       	</div>
-	       	<div>
-				<label for="headCount">숙박인원</label>
-				<input type="text" id="headCount" name="headCount" class="form-control col-6">
-	       	</div>
-	       	<div>
-				<label for="phoneNumber">전화번호</label>
-				<input type="text" id="phoneNumber" name="phoneNumber" class="form-control col-6">
-	       	</div>
-        </div>
+        <div class="container">
+	        <h2 class="text-center font-weight-bold m-4" th:text="'예약하기'"></h2>
+	        
+	        <div class="d-flex justify-content-center">
+	            <div class="booking-box">
+	                <div class="subject-text my-2 font-weight-bold">이름</div>
+	                <input type="text" class="form-control" id="name">
+	
+	                <div class="subject-text my-2 font-weight-bold">예약날짜</div>
+	                <input type="text" class="form-control" id="date">
+	
+	                <div class="subject-text my-2 font-weight-bold">숙박일수</div>
+	                <input type="text" class="form-control" id="day">
+	
+	                <div class="subject-text my-2 font-weight-bold">숙박인원</div>
+	                <input type="text" class="form-control" id="headcount">
+	
+	                <div class="subject-text my-2 font-weight-bold">전화번호</div>
+	                <input type="text" class="form-control" id="phoneNumber">
+	
+	                <button type="button" id="makeBookingBtn" class="btn btn-warning w-100 mt-3">예약하기</button>
+	            </div>
+			</div>
+	   </div>
        </section>
        <footer class="d-flex align-items-center pl-3">
         <div class="final text-secondary">
@@ -62,5 +63,78 @@
         </div>
       </footer>
     </div>
+    
+	<script>
+		$(document).ready(function() {
+			// 날짜 데이트 피커
+			$("#date").datepicker({
+				dateFormat:"yy-mm-dd"
+				, minDate:0 // 오늘, 오늘 이후부터 선택
+			});
+			
+			// 추가 버튼 클릭
+			$("#makeBookingBtn").on("click", function() {
+				//alert("추가");
+				let name = $("#name").val().trim();
+				let date = $("#date").val().trim();
+				let day = $("#day").val().trim();
+				let headcount = $("#headcount").val().trim();
+				let phoneNumber = $("#phoneNumber").val().trim();
+				
+				// validation
+				if (!name) {
+					alert("이름을 입력하세요");
+					return;
+				}
+				
+				if (!date) {
+					alert("날짜를 선택하세요.");
+					return;
+				}
+				
+				if (!day) {
+					alert("숙박일을 입력하세요");
+					return;
+				}
+				
+				if (!headcount) {
+					alert("숙박인원을 입력하세요");
+					return;
+				}
+				
+				if (!phoneNumber) {
+					alert("전화번호를 입력하세요");
+					return;
+				}
+				
+				$.ajax({
+					// request
+					type:"post"
+					, url:"/booking/make-booking"
+					, data:{
+						"name":name, 
+						"date":date, // yyyy-MM-dd
+						"day":day,
+						"headcount":headcount,
+						"phoneNumber":phoneNumber
+					}
+					
+					// response - callback 함수
+					, success:function(data) {
+						// {"code":200, "result":"성공"}
+						if (data.code == 200) {
+							alert("예약 되었습니다.");
+							location.href = "/booking/booking-list-view"; // redirect 아님, get 요청
+						} else {
+							alert(data.error_message);
+						}
+					}
+					, error:function(e) {
+						alert("예약하는데 실패했습니다.");
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

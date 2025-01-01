@@ -1,5 +1,6 @@
 package com.quiz.booking.bo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,29 @@ public class BookingBO {
 	// 삭제
 	public int removeBookingById(int id) {
 		return bookingMapper.deleteBookingById(id);
+	}
+	
+	// 삽입
+	// i:5개
+	// o:성공한 행 개수
+	public int addBooking(String name, LocalDate date, 
+			int day, int headcount, String phoneNumber) {
+		return bookingMapper.insertBooking(name, date, day, headcount, phoneNumber);
+	}
+	
+	// i: name, phoneNumber
+	// o: Booking(단건 최신) or null
+	public Booking getLatestBookingByNamePhoneNumber(String name, String phoneNumber) {
+		List<Booking> bookingList = bookingMapper.selectBookingByNamePhoneNumber(name, phoneNumber);
+		// [] or [Booking] or [Booking, Booking, ...]
+		// 방법1)
+//		if (bookingList.isEmpty()) {
+//			return null;
+//		}
+//		
+//		return bookingList.get(bookingList.size() - 1);
+		
+		// 방법2) 삼항연산자
+		return bookingList.isEmpty() ? null : bookingList.get(bookingList.size() - 1);
 	}
 }
