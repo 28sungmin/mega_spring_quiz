@@ -21,9 +21,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Getter
-@Table(name = "recruit")
+@Table(name = "recruit") // class명이 RecruitEntity이 아닌 Recruit이라면 이 Annotation은 안 해도 
 @Entity
 public class RecruitEntity {
 	@Id

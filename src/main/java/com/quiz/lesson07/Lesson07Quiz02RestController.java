@@ -1,7 +1,6 @@
 package com.quiz.lesson07;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +19,13 @@ public class Lesson07Quiz02RestController {
 	private RecruitRepository recruitRepository;
 	
 	@GetMapping("/1")
-	public Optional<RecruitEntity> select1() {
-		return recruitRepository.findById(8);
+	public RecruitEntity select1() {
+		return recruitRepository.findById(8).orElse(null);
 	}
 	
 	@GetMapping("/2")
 	public List<RecruitEntity> select2(
-			@RequestParam("companyId") int companyId) {
+			@RequestParam("company_id") int companyId) { // company_id는 주소에 치는 것. 물론 카멜케이스로 해도 된다.
 		return recruitRepository.findByCompanyId(companyId);
 	}
 	
@@ -50,4 +49,9 @@ public class Lesson07Quiz02RestController {
 		return recruitRepository.findByRegionAndSalaryBetween("성남시 분당구", 7000, 8500);
 	}
 	
+	@GetMapping("/7")
+	public List<RecruitEntity> select7() {
+		// 마감일이 2026-04-10 이후이고 연봉이 8100 이상인 정규직 공고를 연봉 내림차순으로 조회하세요.
+		return recruitRepository.findByDeadlineAndType("2026-04-10", 8100, "정규직");
+	}
 }
